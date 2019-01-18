@@ -51,3 +51,5 @@ The code in the wdl_runner Docker image includes:
 Take a look at the [Dockerfile](https://github.com/broadinstitute/wdl-runner/blob/master/wdl_runner/Dockerfile) for full details.
 
 ## Tutorial Steps
+
+Now that you've read the overview, you're probably itching to get started! You're ready for the [Tutorial Steps](TutorialSteps.md) themselves.

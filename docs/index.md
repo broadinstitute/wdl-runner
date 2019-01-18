@@ -8,8 +8,14 @@ pages are intended to help you to:
 - Get started with `wdl_runner` from scratch
 - Learn how to use `wdl_runner` in a variety of situations
 
+# Quick Start
 
-# Contents
+If you want to get started as quickly as possible, We have a quick start tutorial designed just for you!
+ 
+* For an overview of what's included: [Tutorial Overview](GettingStarted/TutorialOverview.md).
+* To jump straight in to the tutorial and get started immediately: [Tutorial Steps](GettingStarted/TutorialSteps.md).
+
+# Repository Contents
 
 ## The wdl_runner tool
 
@@ -17,8 +23,6 @@ The `wdl_runner` tool itself! This is a convenient tool which handles:
  
  * Spinning up a Cromwell server on a GCP VM 
  * Launching a WDL workflow by submitting it to the newly created Cromwell server. 
- 
-See the [Quick Start](GettingStarted/TutorialSteps.md) page for a quick tutorial to get you started.
 
 ## Additional Monitoring Tools
 
