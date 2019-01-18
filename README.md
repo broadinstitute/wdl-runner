@@ -1,7 +1,8 @@
-This directory contains utilities that facilitate running WDLs through the Broad's Cromwell execution engine on the Google Cloud Platform. 
 # WDL Runner
 
 Welcome to the WDL Runner repository.
+
+This repo contains utilities that facilitate running WDL workflows through the Broad's Cromwell execution engine on the Google Cloud Platform (GCP).
 
 If you are a user and would like some more user-facing documentation, see [readthedocs](https://wdl-runner.readthedocs.io/en/latest/).
 
