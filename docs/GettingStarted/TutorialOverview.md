@@ -1,4 +1,22 @@
-# WDL Runner Overview
+# WDL Runner Tutorial Overview
+
+## Note: just in case there are errors...
+
+We want this tutorial to be as useful to completely new users as possible. 
+If you find *anything* on this page (or any other) which is:
+
+* Not correct
+* Not obvious to you
+* Making undeclared assumptions
+* Worded obtusely
+  
+Then:
+ 
+* Please (please!) let us know!
+    * You can raise this as an issue [here](https://github.com/broadinstitute/wdl-runner/issues) so that we can improve the tutorial and therefore hopefully improve the experience of future users.
+    * If you use github and are so inclined, you are welcome to help us out by correcting the document yourself! Please submit any improvements you'd like to make as a pull request against the repository. This tutorial is stored in the repository [here](https://github.com/broadinstitute/wdl-runner/blob/master/docs/GettingStarted/QuickStart.md).
+
+## Tutorial Scenario
 
 This example demonstrates running a multi-stage workflow on
 Google Cloud Platform.

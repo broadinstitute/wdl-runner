@@ -2,30 +2,13 @@
 
 This page is intended to be our first-stop tutorial for those new to using wdl_runner.
 
-## Note: just in case there are errors...
-
-We want this page to be as useful to completely new users as possible. 
-If you find *anything* on this page (or any other) which is:
-
-* Not correct
-* Not obvious to you
-* Making undeclared assumptions
-* Worded obtusely
-  
-Then:
- 
-* Please (please!) let us know!
-    * You can raise this as an issue [here](https://github.com/broadinstitute/wdl-runner/issues) so that we can improve the tutorial and therefore hopefully improve the experience of future users.
-    * If you use github and are so inclined, you are welcome to help us out by correcting the document yourself! Please submit any improvements you'd like to make as a pull request against the repository. This tutorial is stored in the repository [here](https://github.com/broadinstitute/wdl-runner/blob/master/docs/GettingStarted/QuickStart.md).
-
 ## Overview
 
-If you want to see an overview of what this tutorial is doing, you can find that [here](TutorialOverview.md).
+If you didn't already, you might want to read the overview of what this tutorial is doing [here](TutorialOverview.md).
+
 Otherwise you can jump straight in! All of the steps you'll need to follow are given below. 
 
 ## Tutorial Steps
-
-With that said, let's get started!
 
 ### (0) Prerequisites
 
