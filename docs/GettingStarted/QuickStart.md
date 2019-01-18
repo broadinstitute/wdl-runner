@@ -2,23 +2,25 @@
 
 This page is intended to be our first-stop tutorial for those new to using wdl_runner.
 
-## In case there are errors...
+## Note: just in case there are errors...
 
 We want this page to be as useful to completely new users as possible. If you find *anything* on this page which is:
 
+* Not correct
 * Not obvious to you
-* Making undeclared assumptions about:
-  * What you know
-  * What you have installed
-  * What your local machine setup looks like
-  * What you have already done to begin setting up
+* Making undeclared assumptions
 * Worded obtusely
   
 Then:
  
-* Please (please!) raise this as an issue [here](https://github.com/broadinstitute/wdl-runner/issues) so that we can improve the tutorial and therefore hopefully improve the experience of future users.
-* If you can use github, and you are so inclined, you are welcome to help us out by correcting the document yourself! Please submit any improvements you'd like to make as a pull request against the repository. This tutorial is stored in the repository [here](https://github.com/broadinstitute/wdl-runner/blob/master/docs/GettingStarted/QuickStart.md).
+* Please (please!) let us know!
+    * You can raise this as an issue [here](https://github.com/broadinstitute/wdl-runner/issues) so that we can improve the tutorial and therefore hopefully improve the experience of future users.
+    * If you use github and are so inclined, you are welcome to help us out by correcting the document yourself! Please submit any improvements you'd like to make as a pull request against the repository. This tutorial is stored in the repository [here](https://github.com/broadinstitute/wdl-runner/blob/master/docs/GettingStarted/QuickStart.md).
 
+
+# Tutorial
+
+With that said, let's get started!
 
 ## Overview
 
@@ -50,9 +52,13 @@ Execution of a running Pipeline proceeds as:
     c. Poll for completion as Cromwell executes:
 
         1) Call pipelines.run() to execute call 1
+        
         2) Poll for completion of call 1
+        
         3) Call pipelines.run() to execute call 2
+        
         4) Poll for completion of call 2
+        
         <etc. until all WDL "calls" complete>
 
     d. Copy workflow metadata to output path
