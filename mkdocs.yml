@@ -8,7 +8,8 @@ repo_url: https://github.com/broadinstitute/wdl-runner
 pages:
 - Welcome: index.md
 - Getting Started:
-  - Quick Start Script: GettingStarted/QuickStart.md
+  - Tutorial Overview: GettingStarted/TutorialOverview.md
+  - Tutorial Steps: GettingStarted/TutorialSteps.md
 
 theme: readthedocs
 

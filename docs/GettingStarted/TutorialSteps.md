@@ -1,10 +1,11 @@
-# Quick Start
+# Quick Start Tutorial
 
 This page is intended to be our first-stop tutorial for those new to using wdl_runner.
 
 ## Note: just in case there are errors...
 
-We want this page to be as useful to completely new users as possible. If you find *anything* on this page which is:
+We want this page to be as useful to completely new users as possible. 
+If you find *anything* on this page (or any other) which is:
 
 * Not correct
 * Not obvious to you
@@ -17,90 +18,25 @@ Then:
     * You can raise this as an issue [here](https://github.com/broadinstitute/wdl-runner/issues) so that we can improve the tutorial and therefore hopefully improve the experience of future users.
     * If you use github and are so inclined, you are welcome to help us out by correcting the document yourself! Please submit any improvements you'd like to make as a pull request against the repository. This tutorial is stored in the repository [here](https://github.com/broadinstitute/wdl-runner/blob/master/docs/GettingStarted/QuickStart.md).
 
+## Overview
 
-# Tutorial
+If you want to see an overview of what this tutorial is doing, you can find that [here](TutorialOverview.md).
+Otherwise you can jump straight in! All of the steps you'll need to follow are given below. 
+
+## Tutorial Steps
 
 With that said, let's get started!
 
-## Overview
-
-This example demonstrates running a multi-stage workflow on
-Google Cloud Platform.
-
-* The workflow is launched with the Google Genomics [Pipelines API](https://cloud.google.com/genomics/docs/quickstart).
-* The workflow is defined using the OpenWDL organization's
-[Workflow Definition Language](https://github.com/openwdl/wdl) (WDL).
-* The workflow stages are orchestrated by the Broad Institute's
-[Cromwell](https://github.com/broadinstitute/cromwell).
-
-When submitted using the Pipelines API, the workflow runs
-on multiple [Google Compute Engine](https://cloud.google.com/compute/)
-virtual machines.
-First a master node is created for Cromwell, and then Cromwell submits
-each stage of the workflow as one or more separate pipelines.
-
-Execution of a running Pipeline proceeds as:
-
-1. Create Compute Engine virtual machine
-
-2. On the VM, in a Docker container, execute wdl_runner.py
-
-    a. Run Cromwell (server)
-
-    b. Submit workflow, inputs, and options to Cromwell server
-
-    c. Poll for completion as Cromwell executes:
-
-        1) Call pipelines.run() to execute call 1
-        
-        2) Poll for completion of call 1
-        
-        3) Call pipelines.run() to execute call 2
-        
-        4) Poll for completion of call 2
-        
-        <etc. until all WDL "calls" complete>
-
-    d. Copy workflow metadata to output path
-
-    e. Copy workflow outputs to output path
-
-3. Destroy Compute Engine Virtual machine
-
-## Setup Overview
-
-Code packaging for the Pipelines API is done through
-[Docker](https://www.docker.com/) images.  The instructions provided
-here explain how to create your own Docker image, although a copy
-of this Docker image has already been built and made available by
-the Broad Institute.
-
-### Code summary
-
-The code in the wdl_runner Docker image includes:
-
-* [OpenJDK 8](http://openjdk.java.net/projects/jdk8/) runtime engine (JRE)
-* [Python 2.7](https://www.python.org/download/releases/2.7/) interpreter
-* [Cromwell release 36](https://github.com/broadinstitute/cromwell/releases/tag/36)
-* [Python and shell scripts from this repository](.)
-
-Take a look at the [Dockerfile](https://github.com/broadinstitute/wdl-runner/blob/master/wdl_runner/Dockerfile) for full details.
-
-## (0) Prerequisites
+### (0) Prerequisites
 
 1. Clone or fork this repository.
-
 2. Enable the Genomics, Cloud Storage, and Compute Engine APIs on a new
    or existing Google Cloud Project using the [Cloud Console](https://console.cloud.google.com/flows/enableapi?apiid=genomics,storage_component,compute_component&redirect=https://console.cloud.google.com)
-
 3. Follow the Google Genomics [getting started instructions](https://cloud.google.com/genomics/docs/quickstart) to install and authorize the Google Cloud SDK.
-
 4. Follow the Cloud Storage instructions for [Creating Storage Buckets](https://cloud.google.com/storage/docs/creating-buckets) to create a bucket for workflow output and logging 
+5. If you plan to create your own Docker images, then [install docker](https://docs.docker.com/engine/installation/#installation)
 
-5. If you plan to create your own Docker images, then
-[install docker](https://docs.docker.com/engine/installation/#installation)
-
-## (1) Create and stage the wdl_runner Docker image
+### (1) Create and stage the wdl_runner Docker image
 
 *If you are going to use the published version of the docker image,
 then skip this step.*
@@ -111,7 +47,7 @@ serving Docker images called the [Google Container Registry](https://cloud.googl
 The following instructions allow you to stage a Docker image in your project's
 Container Registry with all necessary code for orchestrating your workflow.
 
-### (1a) Create the Docker image.
+#### (1a) Create the Docker image.
 
 ```
 git clone https://github.com/broadinstitute/wdl.git
@@ -119,7 +55,7 @@ cd runners/cromwell_on_google/wdl_runner/
 docker build -t ${USER}/wdl_runner .
 ```
 
-### (1b) Push the Docker image to a repository.
+#### (1b) Push the Docker image to a repository.
 
 In this example, we push the container to
 [Google Container Registry](https://cloud.google.com/container-registry/)
@@ -132,7 +68,7 @@ gcloud docker -- push gcr.io/YOUR-PROJECT-ID/wdl_runner
 
 * Replace `YOUR-PROJECT-ID` with your project ID.
 
-## (2) Run a test workflow in the cloud
+### (2) Run a test workflow in the cloud
 
 The file [wdl_pipeline.yaml](https://github.com/broadinstitute/wdl-runner/blob/master/wdl_runner/wdl_pipeline.yaml)
 defines a pipeline for running WDL workflows. By default, it uses the
@@ -152,7 +88,7 @@ docker:
 
 * Replace `YOUR-PROJECT-ID` with your project ID.
 
-#### Run the following command:
+##### Run the following command:
 
 * Replace `YOUR-BUCKET` with a bucket in your project.
 
@@ -171,7 +107,7 @@ OUTPUTS=gs://YOUR-BUCKET/wdl_runner/output \
 
 The output will be an operation ID for the Pipeline.
 
-## (3) Monitor the pipeline operation
+### (3) Monitor the pipeline operation
 
 This github repo includes a shell script,
 [monitoring_tools/monitor_wdl_pipeline.sh](https://github.com/broadinstitute/wdl-runner/blob/master/monitoring_tools/monitor_wdl_pipeline.sh),
@@ -229,12 +165,12 @@ Preemption retries:
   None
 ```
 
-## (4) Check the results
+### (4) Check the results
 
 Check the operation output for a top-level `errors` field.
 If none, then the operation should have finished successfully.
 
-## (5) Check that the output exists
+### (5) Check that the output exists
 
 * Replace `YOUR-BUCKET` with the bucket you used in the previous command.
 
@@ -245,14 +181,14 @@ $ gsutil ls -l gs://YOUR-BUCKET/wdl_runner/output
 TOTAL: 2 objects, 5297 bytes (5.17 KiB)
 ```
 
-## (6) Check the output
+### (6) Check the output
 
 ```
 $ gsutil cat gs://YOUR-BUCKET/wdl_runner/output/md5sum.txt
 00579a00e3e7fa0674428ac7049423e2
 ```
 
-## (7) Clean up the intermediate workspace files
+### (7) Clean up the intermediate workspace files
 
 When Cromwell runs, per-stage output and other intermediate files are
 written to the WORKSPACE path you specified in the `gcloud` command above.

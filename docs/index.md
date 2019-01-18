@@ -18,7 +18,7 @@ The `wdl_runner` tool itself! This is a convenient tool which handles:
  * Spinning up a Cromwell server on a GCP VM 
  * Launching a WDL workflow by submitting it to the newly created Cromwell server. 
  
-See the [Quick Start](GettingStarted/QuickStart.md) page for a quick tutorial to get you started.
+See the [Quick Start](GettingStarted/TutorialSteps.md) page for a quick tutorial to get you started.
 
 ## Additional Monitoring Tools
 
