@@ -1,0 +1,22 @@
+site_name: WDL Runner
+site_url: https://github.com/broadinstitute/wdl-runner
+site_description: WDL Runner User Documentation
+site_author: Broad Institute
+
+repo_url: https://github.com/broadinstitute/wdl-runner
+
+pages:
+- Welcome: index.md
+- Getting Started:
+  - Tutorial Overview: GettingStarted/TutorialOverview.md
+  - Tutorial Steps: GettingStarted/TutorialSteps.md
+
+theme: readthedocs
+
+extra_css:
+    - css/extra.css
+extra_javascript:
+    - js/extra.js
+
+# copyright: Copyright &copy; 2017 <a href="https://broadinstitute.org">Broad Institute</a>
+# google_analytics: ['identifierID', 'URL.org']
