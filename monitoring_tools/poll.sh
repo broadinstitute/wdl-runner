@@ -59,7 +59,7 @@ readonly OPERATION_ID="${1}"
 readonly POLL_INTERVAL_SECONDS="${2:-60}"  # Default 60 seconds between requests
 
 # Loop until operation complete
-while [[ $(get_operation_done_status "${OPERATION_ID}") == "false" ]]; do
+while [[ $(get_operation_done_status "${OPERATION_ID}") != "true" ]]; do
   echo "Operation not complete. Sleeping ${POLL_INTERVAL_SECONDS} seconds"
   sleep ${POLL_INTERVAL_SECONDS}
 done
