@@ -5,7 +5,7 @@
 This example demonstrates running a multi-stage workflow on
 Google Cloud Platform.
 
-* The workflow is launched with the Google Genomics [Pipelines API](https://cloud.google.com/genomics/docs/quickstart).
+* The workflow is launched with the Google Cloud Life Sciences [API](https://cloud.google.com/life-sciences/docs/quickstart).
 * The workflow is defined using the Broad Institute's
 [Workflow Definition Language](https://software.broadinstitute.org/wdl/) (WDL).
 * The workflow stages are orchestrated by the Broad Institute's
@@ -55,7 +55,7 @@ The code in the wdl_runner Docker image includes:
 
 * [OpenJDK 8](http://openjdk.java.net/projects/jdk8/) runtime engine (JRE)
 * [Python 2.7](https://www.python.org/download/releases/2.7/) interpreter
-* [Cromwell release 36](https://github.com/broadinstitute/cromwell/releases/tag/36)
+* [Cromwell release 49](https://github.com/broadinstitute/cromwell/releases/tag/49)
 * [Python and shell scripts from this repository](.)
 
 Take a look at the [Dockerfile](./Dockerfile) for full details.
@@ -67,7 +67,7 @@ Take a look at the [Dockerfile](./Dockerfile) for full details.
 2. Enable the Genomics, Cloud Storage, and Compute Engine APIs on a new
    or existing Google Cloud Project using the [Cloud Console](https://console.cloud.google.com/flows/enableapi?apiid=genomics,storage_component,compute_component&redirect=https://console.cloud.google.com)
 
-3. Follow the Google Genomics [getting started instructions](https://cloud.google.com/genomics/docs/quickstart) to install and authorize the Google Cloud SDK.
+3. Follow the Google Genomics [getting started instructions](https://cloud.google.com/life-sciences/docs/quickstart) to install and authorize the Google Cloud SDK.
 
 4. Follow the Cloud Storage instructions for [Creating Storage Buckets](https://cloud.google.com/storage/docs/creating-buckets) to create a bucket for workflow output and logging 
 
