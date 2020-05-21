@@ -7,7 +7,7 @@ actions:
     22: 22 
 - containerName: WDL_Runner
   commands: [ '/wdl_runner/wdl_runner.sh' ]
-  imageUri: <add gcr path>
+  imageUri: broadinstitute/wdl-runner:latest
 
 resources:
    virtualMachine:
