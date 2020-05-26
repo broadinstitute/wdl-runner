@@ -85,23 +85,12 @@ serving Docker images called the [Google Container Registry](https://cloud.googl
 The following instructions allow you to stage a Docker image in your project's
 Container Registry with all necessary code for orchestrating your workflow.
 
-### (1a) Create the Docker image.
+### (1) Create the Docker image and push the image to a Google Container Registry repository
 
 ```
-git clone https://github.com/broadinstitute/wdl.git
-cd runners/cromwell_on_google/wdl_runner/
-docker build -t ${USER}/wdl_runner .
-```
-
-### (1b) Push the Docker image to a repository.
-
-In this example, we push the container to
-[Google Container Registry](https://cloud.google.com/container-registry/)
-via the following commands:
-
-```
-docker tag ${USER}/wdl_runner gcr.io/YOUR-PROJECT-ID/wdl_runner
-gcloud docker -- push gcr.io/YOUR-PROJECT-ID/wdl_runner
+git clone https://github.com/broadinstitute/wdl-runner.git
+cd wdl-runner/wdl_runner/
+gcloud builds submit ./ --tag=gcr.io/YOUR-PROJECT-ID/wdl-runner
 ```
 
 * Replace `YOUR-PROJECT-ID` with your project ID.
@@ -114,14 +103,14 @@ docker image built by the Broad Institute from this repository:
 
 ```
 docker:
-  imageName: gcr.io/broad-dsde-outreach/wdl_runner:<datestamp>
+  imageName: broadinstitute/wdl-runner
 ```
 
 If you have built your own Docker image, then change the imageName:
 
 ```
 docker:
-  imageName: gcr.io/YOUR-PROJECT-ID/wdl_runner
+  imageName: gcr.io/YOUR-PROJECT-ID/wdl-runner
 ```
 
 * Replace `YOUR-PROJECT-ID` with your project ID.
