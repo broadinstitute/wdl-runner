@@ -11,7 +11,7 @@ Google Cloud Platform.
 * The workflow stages are orchestrated by the Broad Institute's
 [Cromwell](https://github.com/broadinstitute/cromwell).
 
-When submitted using the Pipelines API, the workflow runs
+When submitted using the Cloud Life Sciences API, the workflow runs
 on multiple [Google Compute Engine](https://cloud.google.com/compute/)
 virtual machines.
 First a master node is created for Cromwell, and then Cromwell submits
@@ -64,10 +64,10 @@ Take a look at the [Dockerfile](./Dockerfile) for full details.
 
 1. Clone or fork this repository.
 
-2. Enable the Genomics, Cloud Storage, and Compute Engine APIs on a new
-   or existing Google Cloud Project using the [Cloud Console](https://console.cloud.google.com/flows/enableapi?apiid=genomics,storage_component,compute_component&redirect=https://console.cloud.google.com)
+2. Enable the Life Sciences, Cloud Storage, and Compute Engine APIs on a new
+   or existing Google Cloud Project using the [Cloud Console](https://console.cloud.google.com/flows/enableapi?apiid=lifesciences,storage_component,compute_component&redirect=https://console.cloud.google.com)
 
-3. Follow the Google Genomics [getting started instructions](https://cloud.google.com/life-sciences/docs/quickstart) to install and authorize the Google Cloud SDK.
+3. Follow the Google Cloud Life Sciences [getting started instructions](https://cloud.google.com/life-sciences/docs/quickstart) to install and authorize the Google Cloud SDK.
 
 4. Follow the Cloud Storage instructions for [Creating Storage Buckets](https://cloud.google.com/storage/docs/creating-buckets) to create a bucket for workflow output and logging 
 
@@ -132,8 +132,9 @@ docker:
 
 ```
 gcloud \
-  alpha genomics pipelines run \
+  beta lifesciences pipelines run \
   --pipeline-file wdl_pipeline.yaml \
+  --location us-central1 \
   --regions us-central1 \
   --inputs-from-file WDL=test-wdl/ga4ghMd5.wdl,\
 WORKFLOW_INPUTS=test-wdl/ga4ghMd5.inputs.json,\
