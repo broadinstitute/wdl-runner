@@ -5,13 +5,13 @@
 This example demonstrates running a multi-stage workflow on
 Google Cloud Platform.
 
-* The workflow is launched with the Google Genomics [Pipelines API](https://cloud.google.com/genomics/docs/quickstart).
+* The workflow is launched with the Google Cloud Life Sciences [API](https://cloud.google.com/life-sciences/docs/quickstart).
 * The workflow is defined using the Broad Institute's
 [Workflow Definition Language](https://software.broadinstitute.org/wdl/) (WDL).
 * The workflow stages are orchestrated by the Broad Institute's
 [Cromwell](https://github.com/broadinstitute/cromwell).
 
-When submitted using the Pipelines API, the workflow runs
+When submitted using the Cloud Life Sciences API, the workflow runs
 on multiple [Google Compute Engine](https://cloud.google.com/compute/)
 virtual machines.
 First a master node is created for Cromwell, and then Cromwell submits
@@ -55,7 +55,7 @@ The code in the wdl_runner Docker image includes:
 
 * [OpenJDK 8](http://openjdk.java.net/projects/jdk8/) runtime engine (JRE)
 * [Python 2.7](https://www.python.org/download/releases/2.7/) interpreter
-* [Cromwell release 36](https://github.com/broadinstitute/cromwell/releases/tag/36)
+* [Cromwell release 49](https://github.com/broadinstitute/cromwell/releases/tag/49)
 * [Python and shell scripts from this repository](.)
 
 Take a look at the [Dockerfile](./Dockerfile) for full details.
@@ -64,10 +64,10 @@ Take a look at the [Dockerfile](./Dockerfile) for full details.
 
 1. Clone or fork this repository.
 
-2. Enable the Genomics, Cloud Storage, and Compute Engine APIs on a new
-   or existing Google Cloud Project using the [Cloud Console](https://console.cloud.google.com/flows/enableapi?apiid=genomics,storage_component,compute_component&redirect=https://console.cloud.google.com)
+2. Enable the Life Sciences, Cloud Storage, and Compute Engine APIs on a new
+   or existing Google Cloud Project using the [Cloud Console](https://console.cloud.google.com/flows/enableapi?apiid=lifesciences,storage_component,compute_component&redirect=https://console.cloud.google.com)
 
-3. Follow the Google Genomics [getting started instructions](https://cloud.google.com/genomics/docs/quickstart) to install and authorize the Google Cloud SDK.
+3. Follow the Google Cloud Life Sciences [getting started instructions](https://cloud.google.com/life-sciences/docs/quickstart) to install and authorize the Google Cloud SDK.
 
 4. Follow the Cloud Storage instructions for [Creating Storage Buckets](https://cloud.google.com/storage/docs/creating-buckets) to create a bucket for workflow output and logging 
 
@@ -85,23 +85,12 @@ serving Docker images called the [Google Container Registry](https://cloud.googl
 The following instructions allow you to stage a Docker image in your project's
 Container Registry with all necessary code for orchestrating your workflow.
 
-### (1a) Create the Docker image.
+### (1) Create the Docker image and push the image to a Google Container Registry repository
 
 ```
-git clone https://github.com/broadinstitute/wdl.git
-cd runners/cromwell_on_google/wdl_runner/
-docker build -t ${USER}/wdl_runner .
-```
-
-### (1b) Push the Docker image to a repository.
-
-In this example, we push the container to
-[Google Container Registry](https://cloud.google.com/container-registry/)
-via the following commands:
-
-```
-docker tag ${USER}/wdl_runner gcr.io/YOUR-PROJECT-ID/wdl_runner
-gcloud docker -- push gcr.io/YOUR-PROJECT-ID/wdl_runner
+git clone https://github.com/broadinstitute/wdl-runner.git
+cd wdl-runner/wdl_runner/
+gcloud builds submit ./ --tag=gcr.io/YOUR-PROJECT-ID/wdl-runner
 ```
 
 * Replace `YOUR-PROJECT-ID` with your project ID.
@@ -114,14 +103,14 @@ docker image built by the Broad Institute from this repository:
 
 ```
 docker:
-  imageName: gcr.io/broad-dsde-outreach/wdl_runner:<datestamp>
+  imageName: broadinstitute/wdl-runner
 ```
 
 If you have built your own Docker image, then change the imageName:
 
 ```
 docker:
-  imageName: gcr.io/YOUR-PROJECT-ID/wdl_runner
+  imageName: gcr.io/YOUR-PROJECT-ID/wdl-runner
 ```
 
 * Replace `YOUR-PROJECT-ID` with your project ID.
@@ -132,8 +121,9 @@ docker:
 
 ```
 gcloud \
-  alpha genomics pipelines run \
+  beta lifesciences pipelines run \
   --pipeline-file wdl_pipeline.yaml \
+  --location us-central1 \
   --regions us-central1 \
   --inputs-from-file WDL=test-wdl/ga4ghMd5.wdl,\
 WORKFLOW_INPUTS=test-wdl/ga4ghMd5.inputs.json,\

@@ -1,13 +1,13 @@
 actions:
-- name: SSH
+- containerName: SSH
   imageUri: gcr.io/cloud-genomics-pipelines/tools
   entrypoint: ssh-server
-  flags: [ 'RUN_IN_BACKGROUND' ]
+  runInBackground: true
   portMappings:
     22: 22 
-- name: WDL_Runner
+- containerName: WDL_Runner
   commands: [ '/wdl_runner/wdl_runner.sh' ]
-  imageUri: gcr.io/broad-dsde-outreach/wdl_runner:2019_04_15
+  imageUri: broadinstitute/wdl-runner:latest
 
 resources:
    virtualMachine:

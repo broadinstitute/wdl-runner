@@ -15,10 +15,19 @@ function get_operation_value() {
   local operation_id="${1}"
   local field="${2}"
 
-  gcloud alpha genomics operations describe ${operation_id} \
+  gcloud beta lifesciences operations describe ${operation_id} \
       --format='value('${field}')'
 }
 readonly -f get_operation_value
+
+function get_operation_logging() {
+  local operation_id="${1}"
+  local field="${2}"
+
+  gcloud beta lifesciences operations describe ${operation_id} \
+      --format='yaml('${field}')' | awk '/logs/ {print $NF}'
+}
+readonly -f get_operation_logging
 
 # get_operation_done_status
 #
@@ -27,7 +36,7 @@ readonly -f get_operation_value
 function get_operation_done_status() {
   local operation_id="${1}"
 
-  gcloud alpha genomics operations describe ${operation_id} \
+  gcloud beta lifesciences operations describe ${operation_id} \
       --format='value(done)' \
     | tr 'A-Z' 'a-z'
 }
@@ -45,7 +54,7 @@ readonly -f get_operation_done_status
 function get_operation_status() {
   local operation_id="${1}"
 
-  gcloud alpha genomics operations describe ${operation_id} \
+  gcloud beta lifesciences operations describe ${operation_id} \
     --format='yaml(done, error, metadata.events, name)'
 }
 readonly -f get_operation_status
@@ -57,7 +66,7 @@ readonly -f get_operation_status
 function get_operation_compute_resources() {
   local operation_id="${1}"
 
-  gcloud alpha genomics operations describe ${operation_id} \
+  gcloud beta lifesciences operations describe ${operation_id} \
     --format='yaml(metadata.runtimeMetadata.computeEngine)'
 }
 readonly -f get_operation_compute_resources
@@ -68,7 +77,7 @@ readonly -f get_operation_compute_resources
 function get_operation_all() {
   local operation_id="${1}"
 
-  gcloud alpha genomics operations describe ${operation_id} \
+  gcloud beta lifesciences operations describe ${operation_id} \
     --format yaml
 }
 readonly -f get_operation_all
