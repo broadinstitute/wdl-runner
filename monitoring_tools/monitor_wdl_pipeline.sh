@@ -104,7 +104,6 @@ while [[ $(get_operation_done_status "${OPERATION_ID}") != "true" ]]; do
   # Gather info. These directories can be empty for a while during execution
 
   # Logs should be 0 to 3 files and should be the first to show up
-  GS_LOGS=$(gsutil_ls "${LOGGING}/${OPERATION_ID#operations/}*")
   GS_WS=$(gsutil_ls "${WORKSPACE}/**" | sed -e 's#^'${WORKSPACE}/'##')
   GS_OUT=$(gsutil_ls "${OUTPUTS}")
 
@@ -114,7 +113,7 @@ while [[ $(get_operation_done_status "${OPERATION_ID}") != "true" ]]; do
   #
   # If the call is unsharded (not a scatter), then the call-<stage>
   # directory contains objects like:
-  #   exec.sh -- The code that gets executed on the VM.
+  #   script -- The code that gets executed on the VM.
   #   <stage>-rc.txt -- Contains the return code for the stage.
   #                     This file will not be exist until the stage completes.
   #                     If the VM is preempted, this file will never be written.
@@ -133,49 +132,50 @@ while [[ $(get_operation_done_status "${OPERATION_ID}") != "true" ]]; do
 
   # From the list of the files in the workspace directory, extract useful
   # sets of files from which we can glean status:
-  # All "exec.sh" files: indicates that the call and/or shard and/or attempt
+  # All "script" files: indicates that the call and/or shard and/or attempt
   #   has started.
-  # All "-rc.txt" files: indicates that the call and/or shard and/or attempt
+  # All "rc" files: indicates that the call and/or shard and/or attempt
   #   has completed.
-  # All "attempt-*/exec.sh" files: indicates that a previous attempt failed
+  # All "attempt-*/script" files: indicates that a previous attempt failed
   #   and is assume to be due to preemption (*this is *not* checked explicitly).
 
-  WS_EXECS=$(echo "${GS_WS}" | grep '/exec.sh$' || true)
-  WS_RCS=$(echo "${GS_WS}" | grep '\-rc.txt$' || true)
-  WS_PREEMPTS=$(echo "${GS_WS}" | grep 'attempt-[0-9]\+/exec.sh$' || true)
+  WS_SCRIPTS=$(echo "${GS_WS}" | grep 'script' || true)
+  WS_RCS=$(echo "${GS_WS}" | grep 'rc' || true)
+  WS_PREEMPTS=$(echo "${GS_WS}" | grep 'attempt-[0-9]\+/script' || true)
+  WS_LOGS=$(echo "${GS_WS}" | grep '/*.log$' || true)
 
   # Emit status
 
-  GS_LOGS_COUNT=$(line_count "${GS_LOGS}")
+  GS_LOGS_COUNT=$(line_count "${WS_LOGS}")
   if [[ "${GS_LOGS_COUNT}" -ne "${LOGS_COUNT}" ]]; then
-    if [[ -n "${GS_LOGS}" ]]; then
+    if [[ -n "${WS_LOGS}" ]]; then
       echo "Operation logs found: "
-      echo "${GS_LOGS}" | sed -e 's#^'${LOGGING}/'##g' | indent
+      echo "${WS_LOGS}" | sed -E -e 's#[^/]+/[^/]+/##' | indent
     else
       echo "No operations logs found."
     fi
     LOGS_COUNT="${GS_LOGS_COUNT}"
   fi
 
-  if [[ -n "${WS_EXECS}" ]]; then
+  if [[ -n "${WS_SCRIPTS}" ]]; then
     if [[ -n "${WS_RCS}" ]]; then
       echo "Calls (including shards) completed: "$(line_count "${WS_RCS}")
     fi
 
     # To determine what is running, find all call or call/shard paths that
-    # have an "exec.sh" with no "*-rc.txt" file.
+    # have an "script" with no "rc" file.
     WS_CALLS_STARTED=$(
-      echo "${WS_EXECS}" \
+      echo "${WS_SCRIPTS}" \
         | sed -E \
               -e 's#[^/]+/[^/]+/##' \
-              -e 's#/exec.sh##' \
+              -e 's#/script##' \
               -e 's#/attempt-[0-9]+##' \
         | sort -u)
     WS_CALLS_COMPLETE=$(
       echo "${WS_RCS}" \
         | sed -E \
               -e 's#[^/]+/[^/]+/##' \
-              -e 's#/[^/]+-rc.txt##' \
+              -e 's#/rc##' \
               -e 's#/attempt-[0-9]+##' \
         | sort -u)
 
@@ -223,15 +223,19 @@ gsutil_ls "${OUTPUTS}" | indent
 
 echo
 echo "Preemption retries:"
-WS_PREEMPTS=$(gsutil_ls ${WORKSPACE}/**/attempt-*/exec.sh)
+WS_PREEMPTS=$(gsutil_ls ${WORKSPACE}/**/attempt-*/script)
 if [[ -n "${WS_PREEMPTS}" ]]; then
   echo "${WS_PREEMPTS}" \
     | sed -E \
           -e 's#^'${WORKSPACE}'/[^/]+/[^/]+/##' \
-          -e 's#/exec.sh##' \
+          -e 's#/script##' \
     | indent
 
   echo "Total preemptions: " $(echo "${WS_PREEMPTS}" | wc -l)
 else
   echo "None" | indent
 fi
+
+echo
+echo "Logging output"
+gsutil_ls "${LOGGING}" | indent
