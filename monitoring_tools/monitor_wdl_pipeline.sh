@@ -151,7 +151,6 @@ while [[ $(get_operation_done_status "${OPERATION_ID}") != "true" ]]; do
     if [[ -n "${WS_LOGS}" ]]; then
       echo "Operation logs found: "
       echo "${WS_LOGS}" | sed -E -e 's#[^/]+/[^/]+/##' | indent
-
     else
       echo "No operations logs found."
     fi
