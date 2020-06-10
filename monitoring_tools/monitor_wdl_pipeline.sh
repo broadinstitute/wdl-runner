@@ -104,7 +104,6 @@ while [[ $(get_operation_done_status "${OPERATION_ID}") != "true" ]]; do
   # Gather info. These directories can be empty for a while during execution
 
   # Logs should be 0 to 3 files and should be the first to show up
-  GS_LOGS=$(gsutil_ls "${LOGGING}/${OPERATION_ID#operations/}*")
   GS_WS=$(gsutil_ls "${WORKSPACE}/**" | sed -e 's#^'${WORKSPACE}/'##')
   GS_OUT=$(gsutil_ls "${OUTPUTS}")
 
@@ -143,14 +142,16 @@ while [[ $(get_operation_done_status "${OPERATION_ID}") != "true" ]]; do
   WS_SCRIPTS=$(echo "${GS_WS}" | grep 'script' || true)
   WS_RCS=$(echo "${GS_WS}" | grep 'rc' || true)
   WS_PREEMPTS=$(echo "${GS_WS}" | grep 'attempt-[0-9]\+/script' || true)
+  WS_LOGS=$(echo "${GS_WS}" | grep '/*.log$' || true)
 
   # Emit status
 
-  GS_LOGS_COUNT=$(line_count "${GS_LOGS}")
+  GS_LOGS_COUNT=$(line_count "${WS_LOGS}")
   if [[ "${GS_LOGS_COUNT}" -ne "${LOGS_COUNT}" ]]; then
-    if [[ -n "${GS_LOGS}" ]]; then
+    if [[ -n "${WS_LOGS}" ]]; then
       echo "Operation logs found: "
-      echo "${GS_LOGS}" | sed -e 's#^'${LOGGING}/'##g' | indent
+      echo "${WS_LOGS}" | sed -E -e 's#[^/]+/[^/]+/##' | indent
+
     else
       echo "No operations logs found."
     fi
@@ -163,7 +164,7 @@ while [[ $(get_operation_done_status "${OPERATION_ID}") != "true" ]]; do
     fi
 
     # To determine what is running, find all call or call/shard paths that
-    # have an "script" with no "*rc" file.
+    # have an "script" with no "rc" file.
     WS_CALLS_STARTED=$(
       echo "${WS_SCRIPTS}" \
         | sed -E \
@@ -235,3 +236,7 @@ if [[ -n "${WS_PREEMPTS}" ]]; then
 else
   echo "None" | indent
 fi
+
+echo
+echo "Logging output"
+gsutil_ls "${LOGGING}" | indent
