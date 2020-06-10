@@ -223,12 +223,12 @@ gsutil_ls "${OUTPUTS}" | indent
 
 echo
 echo "Preemption retries:"
-WS_PREEMPTS=$(gsutil_ls ${WORKSPACE}/**/attempt-*/rc)
+WS_PREEMPTS=$(gsutil_ls ${WORKSPACE}/**/attempt-*/script)
 if [[ -n "${WS_PREEMPTS}" ]]; then
   echo "${WS_PREEMPTS}" \
     | sed -E \
           -e 's#^'${WORKSPACE}'/[^/]+/[^/]+/##' \
-          -e 's#/rc##' \
+          -e 's#/script##' \
     | indent
 
   echo "Total preemptions: " $(echo "${WS_PREEMPTS}" | wc -l)
