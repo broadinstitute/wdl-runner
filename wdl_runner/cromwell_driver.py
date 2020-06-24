@@ -68,7 +68,7 @@ class CromwellDriver(object):
       wf_inputs = f.read()
 
     files = {
-        'wdlSource': wdl_source,
+        'workflowSource': wdl_source,
         'workflowInputs': wf_inputs,
     }
 
