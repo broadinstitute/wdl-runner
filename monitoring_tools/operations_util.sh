@@ -13,18 +13,22 @@
 # Request just the specified value of the operation
 function get_operation_value() {
   local operation_id="${1}"
-  local field="${2}"
+  local location="${2}"
+  local field="${3}"
 
   gcloud beta lifesciences operations describe ${operation_id} \
+      --location ${location} \
       --format='value('${field}')'
 }
 readonly -f get_operation_value
 
 function get_operation_logging() {
   local operation_id="${1}"
-  local field="${2}"
+  local location="${2}"
+  local field="${3}"
 
   gcloud beta lifesciences operations describe ${operation_id} \
+      --location ${location} \
       --format='yaml('${field}')' | awk '/logs/ {print $NF}'
 }
 readonly -f get_operation_logging
@@ -35,8 +39,10 @@ readonly -f get_operation_logging
 # Returns the value in all lower-case.
 function get_operation_done_status() {
   local operation_id="${1}"
+  local location="${2}"
 
   gcloud beta lifesciences operations describe ${operation_id} \
+      --location ${location} \
       --format='value(done)' \
     | tr 'A-Z' 'a-z'
 }
@@ -53,8 +59,10 @@ readonly -f get_operation_done_status
 #
 function get_operation_status() {
   local operation_id="${1}"
+  local location="${2}"
 
   gcloud beta lifesciences operations describe ${operation_id} \
+    --location ${location} \
     --format='yaml(done, error, metadata.events, name)'
 }
 readonly -f get_operation_status
@@ -65,8 +73,10 @@ readonly -f get_operation_status
 #
 function get_operation_compute_resources() {
   local operation_id="${1}"
+  local location="${2}"
 
   gcloud beta lifesciences operations describe ${operation_id} \
+    --location ${location} \
     --format='yaml(metadata.runtimeMetadata.computeEngine)'
 }
 readonly -f get_operation_compute_resources
@@ -76,8 +86,10 @@ readonly -f get_operation_compute_resources
 # Requests the full details of the operation in YAML format
 function get_operation_all() {
   local operation_id="${1}"
+  local location="${2}"
 
   gcloud beta lifesciences operations describe ${operation_id} \
+    --location ${location} \
     --format yaml
 }
 readonly -f get_operation_all
