@@ -63,12 +63,12 @@ class CromwellDriver(object):
 
     # Add required input files
     with open(wdl, 'rb') as f:
-      wdl_source = f.read()
+      wf_source = f.read()
     with open(workflow_inputs, 'rb') as f:
       wf_inputs = f.read()
 
     files = {
-        'wdlSource': wdl_source,
+        'workflowSource': wf_source,
         'workflowInputs': wf_inputs,
     }
 

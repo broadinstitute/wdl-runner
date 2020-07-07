@@ -64,20 +64,26 @@ readonly -f indent
 # MAIN
 
 if [[ $# -lt 1 ]]; then
-  2>&1 echo "Usage: $0 OPERATION-ID <poll-interval>"
+  2>&1 echo "Usage: $0 OPERATION-ID <location> <poll-interval>"
   exit 1
 fi
 
 readonly OPERATION_ID="${1}"
-readonly POLL_INTERVAL_SECONDS="${2:-60}"  # Default: 60 seconds between requests
-readonly POLL_WAIT_MAX="${3:-}"            # Default: wait forever
+readonly LOCATION="${2:-us-central1}"      # Default: us-central1
+readonly POLL_INTERVAL_SECONDS="${3:-60}"  # Default: 60 seconds between requests
+readonly POLL_WAIT_MAX="${4:-}"            # Default: wait forever
+
+echo "Location: ${LOCATION}"
 
 # Get GCS paths from the operation
 LOGGING=$(get_operation_logging "${OPERATION_ID}" \
+            "${LOCATION}" \
             "metadata.pipeline.actions")
 WORKSPACE=$(get_operation_value "${OPERATION_ID}" \
+            "${LOCATION}" \
             "metadata.pipeline.environment.WORKSPACE")
 OUTPUTS=$(get_operation_value "${OPERATION_ID}" \
+            "${LOCATION}" \
             "metadata.pipeline.environment.OUTPUTS")
 
 echo "Logging: ${LOGGING}"
@@ -89,7 +95,7 @@ POLL_WAIT_TOTAL=0
 LOGS_COUNT=-1
 PREEMPT_COUNT=-1
 OUTPUT_COUNT=-1
-while [[ $(get_operation_done_status "${OPERATION_ID}") != "true" ]]; do
+while [[ $(get_operation_done_status "${OPERATION_ID}" "${LOCATION}") != "true" ]]; do
 
   echo
   echo "$(date '+%Y-%m-%d %H:%M:%S'): operation not complete"
@@ -215,7 +221,7 @@ echo "$(date '+%Y-%m-%d %H:%M:%S'): operation complete"
 
 echo
 echo "Completed operation status information"
-get_operation_status "${OPERATION_ID}" | indent
+get_operation_status "${OPERATION_ID}" "${LOCATION}" | indent
 
 echo
 echo "Operation output"
