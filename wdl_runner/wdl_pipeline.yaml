@@ -4,12 +4,11 @@ actions:
   entrypoint: ssh-server
   runInBackground: true
   portMappings:
-    22: 22 
+    22: 22
 - containerName: WDL_Runner
   commands: [ '/wdl_runner/wdl_runner.sh' ]
-  imageUri: broadinstitute/wdl-runner:latest
+  imageUri: gcr.io/dg-adam/wdl-runner
 
 resources:
    virtualMachine:
      machineType: n1-standard-2
-
