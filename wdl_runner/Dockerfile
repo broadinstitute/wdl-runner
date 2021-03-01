@@ -4,35 +4,19 @@
 # license that can be found in the LICENSE file or at
 # https://developers.google.com/open-source/licenses/bsd
 
-FROM openjdk:8-jre
+FROM gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
 
-# Install python
-RUN apt-get update && \
-    apt-get install python --yes && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install gcloud
-# See https://cloud.google.com/sdk/
-RUN curl https://sdk.cloud.google.com | bash
-
-# Add the install location explicitly to the path (for non-interactive shells)
-ENV PATH /root/google-cloud-sdk/bin:$PATH
-
-# Install pip for the next two steps...
-RUN apt-get update && \
-    apt-get install python-pip --yes
+# Install openjdk8 and pip for the next two steps...
+RUN apk add --no-cache openjdk8-jre py-pip
 
 # Install Python "requests" (for cromwell_driver.py) package
-RUN pip install requests simplejson
+RUN pip3 install requests simplejson
 
 # Install Google Python client (for file_util.py) package
-RUN pip install --upgrade google-api-python-client
+RUN pip3 install --upgrade google-api-python-client
 
 # Remove pip
-RUN apt-get remove --yes python-pip && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN python3 -m pip uninstall pip --yes
 
 # Copy the wdl_runner python, shell script, and dependencies
 RUN mkdir /wdl_runner

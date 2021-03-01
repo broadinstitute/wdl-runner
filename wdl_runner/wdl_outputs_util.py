@@ -33,7 +33,7 @@ def get_matching_element(value, match_string):
   elif isinstance(value, dict):
     match_list += get_matching_dict_values(value, match_string)
 
-  elif isinstance(value, unicode) or isinstance(value, str):
+  elif isinstance(value, str):
     if value.startswith(match_string) != -1:
       match_list.append(value)
 
@@ -58,7 +58,7 @@ def get_matching_dict_values(d, match_string):
   """Returns a list of values from a dict which match the given string."""
 
   match_list = list()
-  for value in d.itervalues():
+  for value in d.values():
     match_list += get_matching_element(value, match_string)
 
   return match_list
@@ -66,4 +66,3 @@ def get_matching_dict_values(d, match_string):
 
 def get_workflow_output(outputs, working_dir):
   return get_matching_dict_values(outputs, working_dir)
-

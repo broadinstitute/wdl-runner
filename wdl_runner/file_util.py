@@ -22,7 +22,7 @@ import sys_util
 def file_safe_substitute(file_name, mapping):
   """Performs placeholder replacement on a file, saving contents in place."""
 
-  with open(file_name, 'rb') as f:
+  with open(file_name, 'r') as f:
     file_contents = f.read()
     return string.Template(file_contents).safe_substitute(mapping)
 
@@ -102,4 +102,3 @@ def verify_gcs_dir_empty_or_missing(path):
 
 if __name__ == '__main__':
   pass
-
