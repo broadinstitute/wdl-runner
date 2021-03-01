@@ -17,6 +17,7 @@ import logging
 import os
 import subprocess
 import time
+import base64
 
 import requests
 
@@ -58,7 +59,7 @@ class CromwellDriver(object):
       r = requests.get(url)
     return r.json()
 
-  def submit(self, wdl, workflow_inputs, workflow_options, sleep_time=15):
+  def submit(self, wdl, workflow_inputs, workflow_options, workflow_dependencies, sleep_time=15):
     """Post new job to the server and poll for completion."""
 
     # Add required input files
@@ -71,6 +72,13 @@ class CromwellDriver(object):
         'workflowSource': wf_source,
         'workflowInputs': wf_inputs,
     }
+
+    if workflow_dependencies:
+      with open(workflow_dependencies, 'rb') as f:
+        # Read as Base64 byte string
+        wf_dependencies = f.read()
+        # Convert to binary zip file
+        files['workflowDependencies'] = base64.decodebytes(wf_dependencies)
 
     # Add workflow options if specified
     if workflow_options:
@@ -86,7 +94,7 @@ class CromwellDriver(object):
     wait_interval = 5
 
     time.sleep(wait_interval)
-    for attempt in range(max_time_wait/wait_interval):
+    for attempt in range(max_time_wait//wait_interval):
       try:
         job = self.fetch(post=True, files=files)
         break

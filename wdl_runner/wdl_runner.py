@@ -33,7 +33,8 @@ import argparse
 import json
 import logging
 import os
-import urllib2
+from urllib.request import urlopen, Request
+from urllib.error import URLError
 
 import cromwell_driver
 import file_util
@@ -45,11 +46,11 @@ WDL_RUN_METADATA_FILE = 'wdl_run_metadata.json'
 
 def gce_get_metadata(path):
   """Queries the GCE metadata server the specified value."""
-  req = urllib2.Request(
-      'http://metadata/computeMetadata/v1/%s' % path,
+  req = Request(
+      f'http://metadata.google.internal/computeMetadata/v1/{path}',
       None, {'Metadata-Flavor': 'Google'})
 
-  return urllib2.urlopen(req).read()
+  return urlopen(req).read().decode('utf-8')
 
 
 class Runner(object):
@@ -84,7 +85,7 @@ class Runner(object):
         logging.warning("Overridding project ID %s with %s",
                         project, project_id)
 
-    except urllib2.URLError as e:
+    except URLError as e:
       logging.warning(
           "URLError trying to fetch project ID from Compute Engine metdata")
       logging.warning(e)
@@ -95,9 +96,9 @@ class Runner(object):
     new_conf_data = file_util.file_safe_substitute(cromwell_conf, {
         'project_id': project_id,
         'working_dir': working_dir
-        })
+    })
 
-    with open(cromwell_conf, 'wb') as f:
+    with open(cromwell_conf, 'w') as f:
       f.write(new_conf_data)
 
   def copy_workflow_output(self, result):
@@ -126,7 +127,8 @@ class Runner(object):
     # Submit the job to the local Cromwell server
     (result, metadata) = self.driver.submit(self.args.wdl,
                                             self.args.workflow_inputs,
-                                            self.args.workflow_options)
+                                            self.args.workflow_options,
+                                            self.args.workflow_dependencies)
     logging.info(result)
 
     # Copy run metadata and output files to the output directory
@@ -150,6 +152,7 @@ def main():
                       help='Location for Cromwell to put intermediate results.')
   parser.add_argument('--output-dir', required=True,
                       help='Location to store the final results.')
+  parser.add_argument('--workflow-dependencies', required=False, help='The workflow dependencies (ZIP) file')
 
   args = parser.parse_args()
 

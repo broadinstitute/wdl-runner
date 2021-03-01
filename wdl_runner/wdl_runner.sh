@@ -7,7 +7,6 @@
 # https://developers.google.com/open-source/licenses/bsd
 
 set -o errexit
-set -o nounset
 
 readonly INPUT_PATH=/pipeline/input
 
@@ -15,19 +14,29 @@ readonly INPUT_PATH=/pipeline/input
 # the pipeline as environment variables - write them out as
 # files.
 mkdir -p "${INPUT_PATH}"
-cp "${WDL}" "${INPUT_PATH}/wf.wdl"
-cp "${WORKFLOW_INPUTS}" "${INPUT_PATH}/wf.inputs.json"
-cp "${WORKFLOW_OPTIONS}" "${INPUT_PATH}/wf.options.json"
+
+# Only pass in the argument if it exists
+files=(WDL WORKFLOW_INPUTS WORKFLOW_OPTIONS WORKFLOW_DEPENDENCIES)
+inputLoc=(${INPUT_PATH}/wf.wdl ${INPUT_PATH}/wf.inputs.json ${INPUT_PATH}/wf.options.json ${INPUT_PATH}/wf.dependencies.zip)
+argNames=(--wdl --workflow-inputs --workflow-options --workflow-dependencies)
+
+extraArgs=""
+
+COUNTER=0
+for file in ${files[@]}; do
+    if [[ ! -z "${!file}" ]]; then
+        cp "${!file}" "${inputLoc[COUNTER]}"
+        extraArgs+="${argNames[COUNTER]} ${inputLoc[COUNTER]} "
+    fi
+    ((COUNTER+=1))
+done
 
 # Set the working directory to the location of the scripts
 readonly SCRIPT_DIR=$(dirname $0)
 cd "${SCRIPT_DIR}"
 
 # Execute the wdl_runner
-python -u wdl_runner.py \
- --wdl "${INPUT_PATH}"/wf.wdl \
- --workflow-inputs "${INPUT_PATH}"/wf.inputs.json \
+python3 -u wdl_runner.py \
  --working-dir "${WORKSPACE}" \
- --workflow-options "${INPUT_PATH}"/wf.options.json \
- --output-dir "${OUTPUTS}"
-
+ --output-dir "${OUTPUTS}" \
+ ${extraArgs}
