@@ -82,6 +82,7 @@ gcloud \
   --regions us-central1 \
   --inputs-from-file WDL=test-wdl/ga4ghMd5.wdl,\
 WORKFLOW_INPUTS=test-wdl/ga4ghMd5.inputs.json,\
+WORKFLOW_DEPENDENCIES=test-wdl/dependencies.zip.base64,\
 WORKFLOW_OPTIONS=test-wdl/basic.papi.us.options.json \
   --env-vars WORKSPACE=gs://YOUR-BUCKET/wdl_runner/work,\
 OUTPUTS=gs://YOUR-BUCKET/wdl_runner/output \
@@ -89,6 +90,8 @@ OUTPUTS=gs://YOUR-BUCKET/wdl_runner/output \
 ```
 
 The output will be an operation ID for the Pipeline.
+
+Since the gcloud command use utf-8 decoder to read input file, gcloud cannot read in the original zip file. The zip file should be encoded with Base64 encoder before being passed in as the input.
 
 ### (3) Monitor the pipeline operation
 
