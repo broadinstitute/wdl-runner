@@ -38,7 +38,7 @@ Execution of a running Pipeline proceeds as:
 * Create Compute Engine virtual machine
 * On the VM, in a Docker container, execute wdl_runner.py
     * Run Cromwell (server)
-    * Submit workflow, inputs, and options to Cromwell server
+    * Submit workflow, inputs, dependencies, and options to Cromwell server
     * Poll for completion as Cromwell executes:
         1. Call pipelines.run() to execute call 1
         2. Poll for completion of call 1
@@ -62,7 +62,7 @@ the Broad Institute.
 The code in the wdl_runner Docker image includes:
 
 * [OpenJDK 8](http://openjdk.java.net/projects/jdk8/) runtime engine (JRE)
-* [Python 2.7](https://www.python.org/download/releases/2.7/) interpreter
+* [Python 3.8](https://www.python.org/downloads/release/python-387/) interpreter
 * [Cromwell release 36](https://github.com/broadinstitute/cromwell/releases/tag/36)
 * [Python and shell scripts from this repository](.)
 
