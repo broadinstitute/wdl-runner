@@ -15,21 +15,30 @@ readonly INPUT_PATH=/pipeline/input
 # files.
 mkdir -p "${INPUT_PATH}"
 
-# Only pass in the argument if it exists
-files=(WDL WORKFLOW_INPUTS WORKFLOW_OPTIONS WORKFLOW_DEPENDENCIES)
-inputLoc=(${INPUT_PATH}/wf.wdl ${INPUT_PATH}/wf.inputs.json ${INPUT_PATH}/wf.options.json ${INPUT_PATH}/wf.dependencies.zip)
-argNames=(--wdl --workflow-inputs --workflow-options --workflow-dependencies)
+# Check if the required file presents
+if [[ -z ${WDL} ]]; then
+    echo 'no workflow file'
+    exit 1
+fi
+cp "${WDL}" "${INPUT_PATH}/wf.wdl"
+
+if [[ -z ${WORKFLOW_INPUTS} ]]; then
+    echo 'no workflow input file'
+    exit 1
+fi
+cp "${WORKFLOW_INPUTS}" "${INPUT_PATH}/wf.inputs.json"
 
 extraArgs=""
+# Only pass in the argument if it exists
+if [[ ! -z "${WORKFLOW_OPTIONS}" ]]; then
+    cp "${WORKFLOW_OPTIONS}" "${INPUT_PATH}/wf.options.json"
+    extraArgs+="--workflow-options ${INPUT_PATH}/wf.options.json "
+fi
 
-COUNTER=0
-for file in ${files[@]}; do
-    if [[ ! -z "${!file}" ]]; then
-        cp "${!file}" "${inputLoc[COUNTER]}"
-        extraArgs+="${argNames[COUNTER]} ${inputLoc[COUNTER]} "
-    fi
-    ((COUNTER+=1))
-done
+if [[ ! -z "${WORKFLOW_DEPENDENCIES}" ]]; then
+    cp "${WORKFLOW_DEPENDENCIES}" "${INPUT_PATH}/wf.dependencies.zip"
+    extraArgs+="--workflow-dependencies ${INPUT_PATH}/wf.dependencies.zip "
+fi
 
 # Set the working directory to the location of the scripts
 readonly SCRIPT_DIR=$(dirname $0)
@@ -37,6 +46,8 @@ cd "${SCRIPT_DIR}"
 
 # Execute the wdl_runner
 python3 -u wdl_runner.py \
+ --wdl "${INPUT_PATH}"/wf.wdl \
+ --workflow-inputs "${INPUT_PATH}"/wf.inputs.json \
  --working-dir "${WORKSPACE}" \
  --output-dir "${OUTPUTS}" \
  ${extraArgs}

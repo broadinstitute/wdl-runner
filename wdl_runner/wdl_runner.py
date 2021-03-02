@@ -33,8 +33,8 @@ import argparse
 import json
 import logging
 import os
-from urllib.request import urlopen, Request
-from urllib.error import URLError
+from urllib import request
+from urllib import error
 
 import cromwell_driver
 import file_util
@@ -46,11 +46,11 @@ WDL_RUN_METADATA_FILE = 'wdl_run_metadata.json'
 
 def gce_get_metadata(path):
   """Queries the GCE metadata server the specified value."""
-  req = Request(
+  req = request.Request(
       f'http://metadata.google.internal/computeMetadata/v1/{path}',
       None, {'Metadata-Flavor': 'Google'})
 
-  return urlopen(req).read().decode('utf-8')
+  return request.urlopen(req).read().decode('utf-8')
 
 
 class Runner(object):
@@ -85,7 +85,7 @@ class Runner(object):
         logging.warning("Overridding project ID %s with %s",
                         project, project_id)
 
-    except URLError as e:
+    except error.URLError as e:
       logging.warning(
           "URLError trying to fetch project ID from Compute Engine metdata")
       logging.warning(e)
