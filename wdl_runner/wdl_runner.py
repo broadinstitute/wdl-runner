@@ -65,7 +65,8 @@ class Runner(object):
     cromwell_jar = self.environ['CROMWELL']
 
     # Verify that the output directory is empty (or not there).
-    if not file_util.verify_gcs_dir_empty_or_missing(self.args.output_dir):
+    if self.args.output_dir and \
+        not file_util.verify_gcs_dir_empty_or_missing(self.args.output_dir):
       sys_util.exit_with_error(
           "Output directory not empty: %s" % self.args.output_dir)
 
@@ -132,8 +133,9 @@ class Runner(object):
     logging.info(result)
 
     # Copy run metadata and output files to the output directory
-    self.copy_workflow_metadata(metadata, WDL_RUN_METADATA_FILE)
-    self.copy_workflow_output(result)
+    if self.args.output_dir:
+      self.copy_workflow_metadata(metadata, WDL_RUN_METADATA_FILE)
+      self.copy_workflow_output(result)
 
     logging.info("run complete")
 
@@ -150,7 +152,7 @@ def main():
                       help='The Cloud project id')
   parser.add_argument('--working-dir', required=True,
                       help='Location for Cromwell to put intermediate results.')
-  parser.add_argument('--output-dir', required=True,
+  parser.add_argument('--output-dir', required=False,
                       help='Location to store the final results.')
   parser.add_argument('--workflow-dependencies', required=False, help='The workflow dependencies (ZIP) file')
 
@@ -158,7 +160,8 @@ def main():
 
   # Sanitize the working and output paths
   args.working_dir.rstrip('/')
-  args.output_dir.rstrip('/')
+  if args.output_dir:
+    args.output_dir.rstrip('/')
 
   # Write logs at info level
   FORMAT = '%(asctime)-15s %(module)s %(levelname)s: %(message)s'

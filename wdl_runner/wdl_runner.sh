@@ -40,6 +40,10 @@ if [[ ! -z "${WORKFLOW_DEPENDENCIES}" ]]; then
     extraArgs+="--workflow-dependencies ${INPUT_PATH}/wf.dependencies.zip "
 fi
 
+if [[ ! -z "${OUTPUTS}" ]]; then
+    extraArgs+="--output-dir ${OUTPUTS} "
+fi
+
 # Set the working directory to the location of the scripts
 readonly SCRIPT_DIR=$(dirname $0)
 cd "${SCRIPT_DIR}"
@@ -49,5 +53,4 @@ python3 -u wdl_runner.py \
  --wdl "${INPUT_PATH}"/wf.wdl \
  --workflow-inputs "${INPUT_PATH}"/wf.inputs.json \
  --working-dir "${WORKSPACE}" \
- --output-dir "${OUTPUTS}" \
  ${extraArgs}
