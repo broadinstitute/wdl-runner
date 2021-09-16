@@ -7,7 +7,7 @@ actions:
     22: 22 
 - containerName: WDL_Runner
   commands: [ '/wdl_runner/wdl_runner.sh' ]
-  imageUri: gcr.io/google.com/kbinder-sandbox/wdl-runner-vpc
+  imageUri: broadinstitute/wdl-runner:latest
 
 resources:
    virtualMachine:
