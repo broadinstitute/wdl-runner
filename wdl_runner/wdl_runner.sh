@@ -29,5 +29,7 @@ python -u wdl_runner.py \
  --workflow-inputs "${INPUT_PATH}"/wf.inputs.json \
  --working-dir "${WORKSPACE}" \
  --workflow-options "${INPUT_PATH}"/wf.options.json \
- --output-dir "${OUTPUTS}"
+ --output-dir "${OUTPUTS}" \
+ --network "${NETWORK}" \
+ --subnetwork "${SUBNETWORK}"
 

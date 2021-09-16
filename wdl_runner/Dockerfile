@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE file or at
 # https://developers.google.com/open-source/licenses/bsd
 
-FROM openjdk:8-jre
+FROM openjdk:11-jre
 
 # Install python
 RUN apt-get update && \
@@ -20,8 +20,8 @@ RUN curl https://sdk.cloud.google.com | bash
 ENV PATH /root/google-cloud-sdk/bin:$PATH
 
 # Install pip for the next two steps...
-RUN apt-get update && \
-    apt-get install python-pip --yes
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py && \
+    python get-pip.py
 
 # Install Python "requests" (for cromwell_driver.py) package
 RUN pip install requests simplejson
@@ -30,9 +30,7 @@ RUN pip install requests simplejson
 RUN pip install --upgrade google-api-python-client
 
 # Remove pip
-RUN apt-get remove --yes python-pip && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN pip uninstall pip -y
 
 # Copy the wdl_runner python, shell script, and dependencies
 RUN mkdir /wdl_runner
@@ -48,8 +46,8 @@ RUN chmod u+x /wdl_runner/wdl_runner.sh
 # Copy Cromwell and the Cromwell conf template
 RUN mkdir /cromwell
 RUN cd /cromwell && \
-    curl -L -O https://github.com/broadinstitute/cromwell/releases/download/53/cromwell-53.jar
-RUN ln /cromwell/cromwell-53.jar /cromwell/cromwell.jar
+    curl -L -O https://github.com/broadinstitute/cromwell/releases/download/68/cromwell-68.jar
+RUN ln /cromwell/cromwell-68.jar /cromwell/cromwell.jar
 COPY jes_template.conf /cromwell/
 
 # Set up the runtime environment

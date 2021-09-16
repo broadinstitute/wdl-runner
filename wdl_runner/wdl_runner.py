@@ -70,13 +70,13 @@ class Runner(object):
 
     # Plug in the working directory and the project id to the Cromwell conf
     self.fill_cromwell_conf(cromwell_conf,
-                            self.args.working_dir, self.args.project)
+                            self.args.working_dir, self.args.project, self.args.network, self.args.subnetwork)
 
     # Set up the Cromwell driver
     self.driver = cromwell_driver.CromwellDriver(cromwell_conf, cromwell_jar)
     self.driver.start()
 
-  def fill_cromwell_conf(self, cromwell_conf, working_dir, project):
+  def fill_cromwell_conf(self, cromwell_conf, working_dir, project, network, subnetwork):
     try:
       project_id = gce_get_metadata('project/project-id')
 
@@ -94,7 +94,9 @@ class Runner(object):
 
     new_conf_data = file_util.file_safe_substitute(cromwell_conf, {
         'project_id': project_id,
-        'working_dir': working_dir
+        'working_dir': working_dir,
+        'network': network,
+        'subnetwork': subnetwork
         })
 
     with open(cromwell_conf, 'wb') as f:
@@ -150,6 +152,11 @@ def main():
                       help='Location for Cromwell to put intermediate results.')
   parser.add_argument('--output-dir', required=True,
                       help='Location to store the final results.')
+  parser.add_argument('--network', required=True,
+                      help='VPC to execute workflow')
+  parser.add_argument('--subnetwork', required=False,
+                      help='Subnet in VPC to execute workflow')                      
+
 
   args = parser.parse_args()
 
