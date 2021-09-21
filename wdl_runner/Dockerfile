@@ -30,7 +30,8 @@ RUN pip install requests simplejson
 RUN pip install --upgrade google-api-python-client
 
 # Remove pip
-RUN pip uninstall pip -y
+RUN pip uninstall pip -y && \
+    rm get-pip.py
 
 # Copy the wdl_runner python, shell script, and dependencies
 RUN mkdir /wdl_runner
@@ -46,8 +47,8 @@ RUN chmod u+x /wdl_runner/wdl_runner.sh
 # Copy Cromwell and the Cromwell conf template
 RUN mkdir /cromwell
 RUN cd /cromwell && \
-    curl -L -O https://github.com/broadinstitute/cromwell/releases/download/68/cromwell-68.jar
-RUN ln /cromwell/cromwell-68.jar /cromwell/cromwell.jar
+    curl -L -O https://github.com/broadinstitute/cromwell/releases/download/68_hotfix_8e12ab5/cromwell-68-8e12ab5.jar
+RUN ln /cromwell/cromwell-68-8e12ab5.jar /cromwell/cromwell.jar
 COPY jes_template.conf /cromwell/
 
 # Set up the runtime environment
