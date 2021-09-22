@@ -128,7 +128,7 @@ gcloud \
   --inputs-from-file WDL=test-wdl/ga4ghMd5.wdl,\
 WORKFLOW_INPUTS=test-wdl/ga4ghMd5.inputs.json,\
 WORKFLOW_OPTIONS=test-wdl/basic.papi.us.options.json \
-  --env-vars WORKSPACE=gs://YOUR-BUCKET/wdl_runner/work,\
+  --env-vars NETWORK=YOUR-VPC,SUBNETWORK=YOUR-SUBNET,WORKSPACE=gs://YOUR-BUCKET/wdl_runner/work,\
 OUTPUTS=gs://YOUR-BUCKET/wdl_runner/output \
   --logging gs://YOUR-BUCKET/wdl_runner/logging
 ```
