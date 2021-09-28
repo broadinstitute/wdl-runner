@@ -53,9 +53,9 @@ the Broad Institute.
 
 The code in the wdl_runner Docker image includes:
 
-* [OpenJDK 8](http://openjdk.java.net/projects/jdk8/) runtime engine (JRE)
+* [OpenJDK 11](http://openjdk.java.net/projects/jdk/11/) runtime engine (JRE)
 * [Python 2.7](https://www.python.org/download/releases/2.7/) interpreter
-* [Cromwell release 49](https://github.com/broadinstitute/cromwell/releases/tag/49)
+* [Cromwell release 68](https://github.com/broadinstitute/cromwell/releases/tag/68_hotfix_8e12ab5)
 * [Python and shell scripts from this repository](.)
 
 Take a look at the [Dockerfile](./Dockerfile) for full details.
@@ -118,6 +118,7 @@ docker:
 #### Run the following command:
 
 * Replace `YOUR-BUCKET` with a bucket in your project.
+* Optionally specify a VPC Network `YOUR-VPC` and `YOUR-SUBNET` otherwise the Project `Default` VPC will be used
 
 ```
 gcloud \
