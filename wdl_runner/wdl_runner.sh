@@ -23,11 +23,17 @@ cp "${WORKFLOW_OPTIONS}" "${INPUT_PATH}/wf.options.json"
 readonly SCRIPT_DIR=$(dirname $0)
 cd "${SCRIPT_DIR}"
 
+# Set Network and Subnetwork variables to env variables (if exist)
+Net="${NETWORK:-default}"
+Sub="${SUBNETWORK:-default}"
+
 # Execute the wdl_runner
 python -u wdl_runner.py \
  --wdl "${INPUT_PATH}"/wf.wdl \
  --workflow-inputs "${INPUT_PATH}"/wf.inputs.json \
  --working-dir "${WORKSPACE}" \
  --workflow-options "${INPUT_PATH}"/wf.options.json \
- --output-dir "${OUTPUTS}"
+ --output-dir "${OUTPUTS}" \
+ --network $Net \
+ --subnetwork $Sub
 
